@@ -75,7 +75,7 @@ Essas funcionalidades são organizadas através de tabelas interligadas, cada um
 
 ## Arquivo de Consultas
 
-Se quiser exemplos práticos, veja o arquivo de [consultas detalhadas](queries_detalhadas.txt) que acompanha o projeto. Ele contém tudo, desde seleções simples até junções mais avançadas.
+Se quiser exemplos práticos, veja o arquivo de [consultas detalhadas](/queries_detalhadas.txt) que acompanha o projeto. Ele contém tudo, desde seleções simples até junções mais avançadas.
 
 ---
 
