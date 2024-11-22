@@ -1,0 +1,144 @@
+
+# Consultas SQL Detalhadas para o Projeto Oficina
+
+Este arquivo contém exemplos práticos de consultas SQL aplicáveis ao banco de dados da Oficina. São abordadas desde operações simples até consultas mais avançadas, organizadas por tema.
+
+---
+
+## Recuperações Simples com SELECT Statement
+
+1. **Listar todos os clientes cadastrados:**
+   ```sql
+   SELECT * 
+   FROM Cliente;
+   ```
+
+2. **Exibir apenas os nomes e telefones dos clientes:**
+   ```sql
+   SELECT Nome, Telefone 
+   FROM Cliente;
+   ```
+
+---
+
+## Filtros com WHERE Statement
+
+3. **Listar produtos com valor acima de R$100,00:**
+   ```sql
+   SELECT * 
+   FROM Produto
+   WHERE Valor > 100.00;
+   ```
+
+4. **Exibir pedidos com status 'Pendente':**
+   ```sql
+   SELECT * 
+   FROM Pedido
+   WHERE StatusPedido = 'Pendente';
+   ```
+
+---
+
+## Atributos Derivados
+
+5. **Calcular o valor total do estoque (quantidade x valor do produto):**
+   ```sql
+   SELECT p.Descricao, (ep.Quantidade * p.Valor) AS ValorTotalEstoque
+   FROM Estoque_Produto ep
+   INNER JOIN Produto p ON ep.Produto_idProduto = p.idProduto;
+   ```
+
+6. **Obter a idade das pessoas físicas cadastradas:**
+   ```sql
+   SELECT idPessoaFisica, CPF, 
+          YEAR(CURDATE()) - YEAR(DataNascimento) AS Idade
+   FROM PessoaFisica;
+   ```
+
+---
+
+## Ordenações com ORDER BY
+
+7. **Listar fornecedores em ordem alfabética pela Razão Social:**
+   ```sql
+   SELECT * 
+   FROM Fornecedor
+   ORDER BY RazaoSocial ASC;
+   ```
+
+8. **Listar entregas ordenadas pela data de envio mais recente:**
+   ```sql
+   SELECT * 
+   FROM Entrega
+   ORDER BY DataEnvio DESC;
+   ```
+
+---
+
+## Condições de Filtros aos Grupos – HAVING Statement
+
+9. **Exibir categorias de produtos que possuem mais de 50 unidades no estoque:**
+   ```sql
+   SELECT p.Categoria, SUM(ep.Quantidade) AS TotalQuantidade
+   FROM Produto p
+   INNER JOIN Estoque_Produto ep ON p.idProduto = ep.Produto_idProduto
+   GROUP BY p.Categoria
+   HAVING TotalQuantidade > 50;
+   ```
+
+10. **Listar clientes que fizeram mais de 5 pedidos:**
+    ```sql
+    SELECT c.Nome, COUNT(p.idPedido) AS TotalPedidos
+    FROM Cliente c
+    INNER JOIN Pedido p ON c.idCliente = p.Cliente_idCliente
+    GROUP BY c.idCliente
+    HAVING TotalPedidos > 5;
+    ```
+
+---
+
+## Junções Entre Tabelas
+
+11. **Obter informações detalhadas de pedidos, incluindo nome do cliente e status da entrega:**
+    ```sql
+    SELECT p.idPedido, c.Nome AS NomeCliente, e.StatusEntrega
+    FROM Pedido p
+    INNER JOIN Cliente c ON p.Cliente_idCliente = c.idCliente
+    INNER JOIN Entrega e ON p.Entrega_idEntrega = e.idEntrega;
+    ```
+
+12. **Listar produtos com seus respectivos fornecedores:**
+    ```sql
+    SELECT p.Descricao AS Produto, f.RazaoSocial AS Fornecedor
+    FROM ProdutoDisponibilizando pd
+    INNER JOIN Produto p ON pd.Produto_idProduto = p.idProduto
+    INNER JOIN Fornecedor f ON pd.Fornecedor_idFornecedor = f.idFornecedor;
+    ```
+
+13. **Obter o total pago por cada pedido:**
+    ```sql
+    SELECT p.idPedido, SUM(pg.Valor) AS TotalPago
+    FROM Pedido p
+    INNER JOIN Pagamento pg ON p.idPedido = pg.Pedido_idPedido
+    GROUP BY p.idPedido;
+    ```
+
+14. **Identificar produtos que estão fora de estoque (quantidade zero):**
+    ```sql
+    SELECT p.Descricao
+    FROM Produto p
+    LEFT JOIN Estoque_Produto ep ON p.idProduto = ep.Produto_idProduto
+    WHERE ep.Quantidade = 0 OR ep.Quantidade IS NULL;
+    ```
+
+15. **Exibir detalhes de pagamentos feitos por clientes, incluindo nome e valor pago:**
+    ```sql
+    SELECT c.Nome, pg.Valor, pg.DataPagamento
+    FROM Pagamento pg
+    INNER JOIN Pedido p ON pg.Pedido_idPedido = p.idPedido
+    INNER JOIN Cliente c ON p.Cliente_idCliente = c.idCliente;
+    ```
+
+---
+
+Estas consultas cobrem diferentes cenários de uso no banco de dados da Oficina, permitindo que você explore dados de várias formas para atender às necessidades operacionais e analíticas.
